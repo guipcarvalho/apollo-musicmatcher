@@ -5,7 +5,7 @@ public record Playlist
 {
     [GraphQLDescription("The ID for the playlist.")]
     [ID]
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public required string Id { get; init; }
     
     [GraphQLDescription("The name of the playlist.")]
     public required string Name { get; init; }

@@ -1,26 +1,42 @@
-using Odyssey.MusicMatcher.Models;
+using SpotifyWeb;
+using System.Linq;
+using System.Net;
+using Playlist = Odyssey.MusicMatcher.Models.Playlist;
 
 namespace Odyssey.MusicMatcher.GraphQL.Query;
 
 public class Query
 {
     [GraphQLDescription("Playlists hand-picked to be featured to all users.")]
-    public List<Playlist> GetFeaturedPlaylists() => new()
+    public async Task<IEnumerable<Playlist>> GetFeaturedPlaylists([Service] SpotifyService spotifyService)
     {
-        new Playlist
+        var response = await spotifyService.GetFeaturedPlaylistsAsync();
+
+        return response.Playlists.Items.Select(playlist => new Playlist
         {
-            Name = "Coding",
-            Description = "Music to code to"
-        },
-        new Playlist
+            Id = playlist.Id,
+            Name = playlist.Name,
+            Description = playlist.Description
+        });
+    }
+
+    [GraphQLDescription("Get a playlist by its ID.")]
+    public async Task<Playlist?> GetPlaylist([ID] string id, [Service] SpotifyService spotifyService)
+    {
+        try
         {
-            Name = "Running",
-            Description = "Music to run to"
-        },
-        new Playlist
-        {
-            Name = "Chill",
-            Description = "Music to chill to"
+            var playlist = await spotifyService.GetPlaylistAsync(id);
+            
+            return new Playlist
+            {
+                Id = playlist.Id,
+                Name = playlist.Name,
+                Description = playlist.Description
+            };
         }
-    };
+        catch (ApiException e) when (e.StatusCode == (int)HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
 }
