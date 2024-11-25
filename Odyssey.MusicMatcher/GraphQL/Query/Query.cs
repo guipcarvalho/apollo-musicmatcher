@@ -1,5 +1,4 @@
 using SpotifyWeb;
-using System.Linq;
 using System.Net;
 using Playlist = Odyssey.MusicMatcher.Models.Playlist;
 
@@ -27,12 +26,7 @@ public class Query
         {
             var playlist = await spotifyService.GetPlaylistAsync(id);
             
-            return new Playlist
-            {
-                Id = playlist.Id,
-                Name = playlist.Name,
-                Description = playlist.Description
-            };
+            return new Playlist(playlist);
         }
         catch (ApiException e) when (e.StatusCode == (int)HttpStatusCode.NotFound)
         {
