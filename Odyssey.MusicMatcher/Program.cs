@@ -9,4 +9,6 @@ var app = builder.Build();
 
 app.MapGraphQL();
 
+app.UseGraphQLPlayground();
+
 app.Run();
