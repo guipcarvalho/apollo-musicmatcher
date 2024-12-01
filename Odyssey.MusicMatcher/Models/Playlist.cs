@@ -33,7 +33,13 @@ public record Playlist
             Uri = item.Track.Uri
         }).ToList();
     }
-    
+
+    public Playlist(string id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
     [GraphQLDescription("The tracks in the playlist.")]
     public async Task<List<Track>> Tracks(SpotifyService spotifyService,
         [Parent] Playlist playlist

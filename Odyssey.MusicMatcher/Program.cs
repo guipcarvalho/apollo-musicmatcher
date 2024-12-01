@@ -1,3 +1,4 @@
+using Odyssey.MusicMatcher.GraphQL.Mutations;
 using Odyssey.MusicMatcher.GraphQL.Query;
 using SpotifyWeb;
 
@@ -6,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<SpotifyService>();
 
 builder.Services.AddGraphQLServer()
-    .AddQueryType<Query>();
+    .AddQueryType<Query>()
+    .AddMutationType<Mutation>();
 
 builder
     .Services
